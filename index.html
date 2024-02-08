@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
-    <head><title>This is the title!</title>
+    <head><title>Shy Checkbox</title>
     </head>
-    <body id="body"><p>This is body paragraph 1! Coord info: <span id="coordInfo">THIS WILL GET FILLED OUT ON MOUSE MOVE</span>.</p>
-        <input type="checkbox" id="chkbox" onclick="doSomething(this)">
-        <div style="height: 100px">Empty div</div>
-    <p>And this is body paragraph 2. <i>The end.</i></p>
+    <body id="body">
+        <div style="width: 1000px; height: 500px">
+            <input type="checkbox" id="chkbox" onclick="clicked(this)"><span id="label"> Click Me!</span>
+            <span id="coordInfo" style="display: none">THIS WILL GET FILLED OUT ON MOUSE MOVE</span>
+        </div>
     <script src="shy-checkbox.js"></script>
 </body>
 </html>

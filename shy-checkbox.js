@@ -8,15 +8,24 @@ body = document.getElementById("body");
 console.log(`body=${body}.`);   //DEBUG
 coordInfoElement = document.getElementById("coordInfo");
 console.log(`coordInfoElement=${coordInfoElement}.`);   //DEBUG
+label = document.getElementById("label");
+console.log(`label=${label}.`);   //DEBUG
 
-moveCentreTo(checkbox, { x: 100, y: 100 });
+// moveCentreTo(checkbox, { x: 100, y: 100 });
+const startPos = { x: 400, y: 250 };
+moveTo(checkbox, startPos);
 checkbox.checked = false;
+moveTo(label, addVector(startPos, { x: elementSize(checkbox).x * 1.5, y: 0 }));
 
 // body.addEventListener("mousemove", moveCheckboxToCursor);
 body.addEventListener("mousemove", moveCheckboxAwayFromCursor);
 
 function doSomething(e) {
     moveTo(e, { screenX: 250, screenY: 150 });
+}
+
+function clicked() {
+    alert("Ouch!");
 }
 
 function moveCheckboxToCursor(e) {
