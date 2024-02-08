@@ -17,6 +17,6 @@ function moveCheckboxToCursor(e) {
 
 function moveTo(o, event) {
     o.style.position = 'fixed';
-    o.style.left = event.screenX + "px";
-    o.style.top = event.screenY + "px";
+    o.style.left = event.clientX + "px";
+    o.style.top = event.clientY + "px";
 }
