@@ -10,6 +10,7 @@ coordInfoElement = document.getElementById("coordInfo");
 console.log(`coordInfoElement=${coordInfoElement}.`);   //DEBUG
 
 moveCentreTo(checkbox, { x: 100, y: 100 });
+checkbox.checked = false;
 
 // body.addEventListener("mousemove", moveCheckboxToCursor);
 body.addEventListener("mousemove", moveCheckboxAwayFromCursor);
@@ -26,8 +27,9 @@ function moveCheckboxToCursor(e) {
 function moveCheckboxAwayFromCursor(e) {
     const cursor = clientPosition(e);
     let target = positionOf(checkbox);
-    let delta = computeForce(cursor, target);
-    let newPos = addVector(target, delta);
+    let delta = computeTotalForce(cursor, target);
+    // let newPos = addVector(target, delta);
+    let newPos = clampVector(addVector(target, delta), zeroVector, elementSize(body));
     coordInfoElement.innerText = `cursor: (${cursor.x}, ${cursor.y}); target: (${target.x}, ${target.y}); delta: (${delta.x}, ${delta.y}); newPos: (${newPos.x}, ${newPos.y}).`;
     // moveCentreTo(checkbox, newPos);
     moveTo(checkbox, newPos);
@@ -88,7 +90,7 @@ function vectorLengthSquared(v) {
     return dotProduct(v, v);
 }
 
-function clampVector(v, m) {
+function clampVectorLength(v, m) {
     const d = vectorLength(v);      //HACK: Could be cleverer and avoid a sqrt() here
     if (d > m) {
         return scalarMultiplyVector(v, m / d);
@@ -97,7 +99,19 @@ function clampVector(v, m) {
     }
 }
 
-function computeForce(cursor, target) {
+function clampVector(v, topLeft, botRight) {
+    return { x: Math.min(Math.max(v.x, topLeft.x), botRight.x), y: Math.min(Math.max(v.y, topLeft.y), botRight.y) };
+}
+
+function computeTotalForce(cursor, target) {
+    return addVector(computePointForce(cursor, target),
+        addVector(computeHorizontalForce(0, target),
+        addVector(computeHorizontalForce(elementSize(body).x, target),
+        addVector(computeVerticalForce(0, target),
+        computeVerticalForce(elementSize(body).y, target)))));
+}
+
+function computePointForce(cursor, target) {
     const diff = subtractVector(target, cursor);
     const d = vectorLength(diff);
 
@@ -105,6 +119,15 @@ function computeForce(cursor, target) {
         return zeroVector;
     }
 
-    const intensity = 200 / (d + 3);
-    return clampVector(scalarMultiplyVector(diff, intensity / (d + 1)), 10);
+    const intensity = 300 / (d + 30);
+    // const intensity = 30 / Math.sqrt(d + 30);
+    return clampVectorLength(scalarMultiplyVector(diff, intensity / (d + 1)), 20);
+}
+
+function computeHorizontalForce(x, target) {
+    return computePointForce({x, y: target.y }, target);
+}
+
+function computeVerticalForce(y, target) {
+    return computePointForce({x: target.x, y }, target);
 }
