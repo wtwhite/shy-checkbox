@@ -12,11 +12,31 @@ function doSomething(e) {
 }
 
 function moveCheckboxToCursor(e) {
-    moveTo(checkbox, e);
+    moveTo(checkbox, clientPosition(e));
 }
 
-function moveTo(o, event) {
+function clientPosition(e) {
+    return { x: e.clientX, y: e.clientY };
+}
+
+function moveTo(o, pos) {
     o.style.position = 'fixed';
-    o.style.left = event.clientX + "px";
-    o.style.top = event.clientY + "px";
+    o.style.left = pos.x + "px";
+    o.style.top = pos.y + "px";
+}
+
+function addVector(u, v) {
+    return { x: u.x + v.x, y: u.y + v.y };
+}
+
+function scalarMultiplyVector(v, c) {
+    return { x: c * v.x, y: c * v.y };
+}
+
+function subtractVector(u, v) {
+    return addVector(u, scalarMultiplyVector(v, -1));
+}
+
+function dotProduct(u, v) {
+    return u.x * v.x + u.y * v.y;
 }
